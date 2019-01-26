@@ -1,0 +1,78 @@
+Make an authenticated request to https://api.github.com/users/VikParuchuri/orgs. This will give us a list of the organizations a GitHub user belongs to.
+Assign the JSON content of the response to orgs (you can get this with response.json()).
+
+# Create a dictionary of headers containing our Authorization header.
+headers = {"Authorization": "token 1f36137fbbe1602f779300dad26e4c1b7fbab631"}
+
+# Make a GET request to the GitHub API with our headers.
+# This API endpoint will give us details about Vik Paruchuri.
+response = requests.get("https://api.github.com/users/VikParuchuri", headers=headers)
+
+# Print the content of the response.  As you can see, this token corresponds to the account of Vik Paruchuri.
+print(response.json())
+
++++++++++++++++++++++++++++++
+Make a GET request to the https://api.github.com/repos/octocat/Hello-World endpoint.
+Assign the JSON result to hello_world.
+
+# Enter your answer here.
+headers = {"Authorization": "token 1f36137fbbe1602f779300dad26e4c1b7fbab631"}
+
+# Make a GET request to the GitHub API with our headers.
+# This API endpoint will give us details about Vik Paruchuri.
+response = requests.get("https://api.github.com/repos/octocat/Hello-World", headers=headers)
+
+# Print the content of the response.  As you can see, this token corresponds to the account of Vik Paruchuri.
+print(response.json())
+hello_world = response.json()
+
++++++++++++++++++++++++++++++++++++
+Get the second page of repositories that Vik Paruchuri starred from the https://api.github.com/users/VikParuchuri/starred endpoint.
+Assign the JSON of the response to page2_repos.
+params = {"per_page": 50, "page": 1}
+response = requests.get("https://api.github.com/users/VikParuchuri/starred", headers=headers, params=params)
+page1_repos = response.json()
+params = {"per_page": 50, "page": 2}
+response = requests.get("https://api.github.com/users/VikParuchuri/starred", headers=headers, params=params)
+page2_repos = response.json()
+
++++++++++++++++++++++++++++++++++++
+Make a GET request to the "https://api.github.com/user" endpoint.
+Assign the JSON of the result to the user variable.
+
+headers = {"Authorization": "token 1f36137fbbe1602f779300dad26e4c1b7fbab631"}
+response = requests.get("https://api.github.com/user", headers=headers)
+user = response.json()
+
++++++++++++++++++++++++++++++++++++
+Create a repository named learning-about-apis.
+Assign the status code of the response to the status variable.
+
+# Create the data we'll pass into the API endpoint.  While this endpoint only requires the "name" key, there are other optional keys.
+payload = {"name": "learning-about-apis"}
+headers = {"Authorization": "token 1f36137fbbe1602f779300dad26e4c1b7fbab631"}
+
+# We need to pass in our authentication headers!
+response = requests.post("https://api.github.com/user/repos", json=payload, headers=headers)
+print(response.status_code)
+status = response.status_code
+
++++++++++++++++++++++++++++++++++++
+Make a PATCH request to the https://api.github.com/repos/VikParuchuri/learning-about-apis endpoint that changes the description to Learning about requests!.
+Assign the status code of the response to status.
+
+payload = {"description": "The best repository ever!", "name": "test"}
+response = requests.patch("https://api.github.com/repos/VikParuchuri/test", json=payload, headers=headers)
+print(response.status_code)
+payload = {"description": "Learning about requests!", "name": "learning-about-apis"}
+response = requests.patch("https://api.github.com/repos/VikParuchuri/learning-about-apis", json=payload, headers=headers)
+status = response.status_code
+
++++++++++++++++++++++++++++++++++++
+
+Make a DELETE request to the https://api.github.com/repos/VikParuchuri/learning-about-apis endpoint.
+Assign the status_code of the response to the variable status.
+
+payload = {"description": "Delting this darned api!", "name": "learning-about-apis"}
+response = requests.delete("https://api.github.com/repos/VikParuchuri/learning-about-apis", json=payload, headers=headers)
+status = response.status_code
