@@ -1,0 +1,123 @@
+Retrieve the /r/python subreddit's top posts for the past day.
+Make a GET request to https://oauth.reddit.com/r/python/top using the get method of the requests library. See the documentation for the /r/python/top endpoint if you need help.
+Pass in the header information we showed you earlier in this section.
+To retrieve only the top posts for the past day, pass in a query parameter t (for "time") and set its value to the string day.
+Use the json method on the response to get the JSON response data.
+Assign the JSON response data to the variable python_top.
+
+blah = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+params = {"t" : "day"}
+response = requests.get("https://oauth.reddit.com/r/python/top", headers=blah, params=params)
+python_top = response.json()
+
++++++++++++++++++++++++++++++++++++++++++
+
+Explore the python_top dictionary.
+Extract the list containing all of the posts, and assign it to python_top_articles.
+Find the post with the most upvotes.
+Assign the ID for the post with the most upvotes to most_upvoted.
+
+blah = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+params = {"t" : "day"}
+response = requests.get("https://oauth.reddit.com/r/python/top", headers=blah, params=params)
+python_top = response.json()
+#python_top_articles = python_top[]
+most_upvoted_num = 0
+most_upvoted = "None"
+for article in python_top["data"]["children"]:
+    child = article["data"]
+    if child["ups"] >= most_upvoted_num:
+        most_upvoted_num = child["ups"]
+        most_upvoted = child["id"]
+print("The most upvoted ID is ", most_upvoted, " With: ", most_upvoted_num, " Votes")
+
+++++++++++++++++++++++++++++++++++++
+Get all of the comments on the /r/python subreddit's top post from the past day.
+Generate the full URL to query, using the subreddit name and post ID.
+Make a GET request to the URL.
+Get the response data using the response's json method.
+Assign the response data to the variable comments.
+
+blah = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+params = {"t" : "day"}
+response = requests.get("https://oauth.reddit.com/r/python/top", headers=blah, params=params)
+python_top = response.json()
+most_upvoted_num = 0
+most_upvoted = "None"
+for article in python_top["data"]["children"]:
+    child = article["data"]
+    if child["ups"] >= most_upvoted_num:
+        most_upvoted_num = child["ups"]
+        most_upvoted = "https://oauth.reddit.com/r/" + "python" + "/comments/" + child["id"]
+#
+# There's a bug where child["subreddit"] returns "Python" but the correct URL needs to be "python".
+# And that is even though the child["url"] has "Python" in it. Weird and confusing.
+#
+response = requests.get(most_upvoted, headers=blah)
+
+comments = response.json()
+
+++++++++++++++++++++++++++++++++
+
+Find the most upvoted top-level comment in comments.
+Extract the comments list from the comments variable, and assign it to comments_list.
+Assign the ID for the comment with the most upvotes to most_upvoted_comment.
+
+blah = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+params = {"t" : "day"}
+response = requests.get("https://oauth.reddit.com/r/python/top", headers=blah, params=params)
+python_top = response.json()
+most_upvoted_num = 0
+most_upvoted = "None"
+for article in python_top["data"]["children"]:
+    child = article["data"]
+    if child["ups"] >= most_upvoted_num:
+        most_upvoted_num = child["ups"]
+        most_upvoted = "https://oauth.reddit.com/r/" + "python" + "/comments/" + child["id"]
+#
+# There's a bug where child["subreddit"] returns "Python" but the correct URL needs to be "python".
+# And that is even though the child["url"] has "Python" in it. Weird and confusing.
+#
+response = requests.get(most_upvoted, headers=blah)
+comments = response.json()
+comments_list = comments[1]
+up_est = 0
+for comment in comments_list["data"]["children"]:
+    if comment['data']['ups'] > up_est:
+        up_est = comment['data']['ups']
+        most_upvoted_comment = comment['data']['id']
+print("Most Upvoted Comment: ", comment['data']['body'])
+
+++++++++++++++++++++++++
+Make a POST request to the /api/vote endpoint to upvote the most upvoted comment from the last screen.
+Assign the status code for the response to the variable status.
+
+blah = {"Authorization": "bearer 13426216-4U1ckno9J5AiK72VRbpEeBaMSKk", "User-Agent": "Dataquest/1.0"}
+params = {"t" : "day"}
+response = requests.get("https://oauth.reddit.com/r/python/top", headers=blah, params=params)
+python_top = response.json()
+most_upvoted_num = 0
+most_upvoted = "None"
+for article in python_top["data"]["children"]:
+    child = article["data"]
+    if child["ups"] >= most_upvoted_num:
+        most_upvoted_num = child["ups"]
+        most_upvoted = "https://oauth.reddit.com/r/" + "python" + "/comments/" + child["id"]
+#
+# There's a bug where child["subreddit"] returns "Python" but the correct URL needs to be "python".
+# And that is even though the child["url"] has "Python" in it. Weird and confusing.
+#
+response = requests.get(most_upvoted, headers=blah)
+comments = response.json()
+comments_list = comments[1]
+up_est = 0
+for comment in comments_list["data"]["children"]:
+    if comment['data']['ups'] > up_est:
+        up_est = comment['data']['ups']
+        most_upvoted_comment = comment['data']['id']
+print("Most Upvoted Comment: ", comment['data']['body'])
+
+payload = {'dir': 1, 'id':most_upvoted_comment}
+response = requests.post("https://oauth.reddit.com/api/vote", json=payload, headers=blah)
+status = response.status_code
+

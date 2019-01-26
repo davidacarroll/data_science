@@ -1,0 +1,34 @@
+Simulate a second collaborator working on the remote:
+Clone /dataquest/user/git/chatbot into /home/dq/chatbot2.
+cd into chatbot2.
+Create a new branch called happy-bot.
+Edit bot.py to output happy messages.
+Commit your changes with the message Made the bot 20% happier!.
+Push the happy-bot branch to the remote.
+In your local repo /home/dq/chatbot, check out the branch.
+Run git fetch to update the Git history.
+Check out the happy-bot branch.
+Run bot.py to make sure the file changed.
+
+cd /home/dq
+git clone /dataquest/user/git/chatbot chatbot2
+cd chatbot2
+git checkout -b happy-bot
+printf "\nprint('Happiness level: 120')" >> bot.py
+git add bot.py
+git commit -m "Made the bot 20% happier!"
+git push origin happy-bot
+cd /home/dq
+cd chatbot
+git fetch
+git checkout happy-bot
+python bot.py
+
+You should see the message "Made the bot 20% happier!"
+
+cd /home/dq/chatbot
+git checkout -b feature/random-messages
+printf "\nimport random\nmessages=['Hi', 'Hi.', 'How are you?', 'Today is a long day...']\nn=random.randint(1,len(messages)-1)\nprint(messages[n])" >> bot.py
+git add bot.py
+git commit -m "Added random messaging to the bot!"
+git push origin feature/random-messages
